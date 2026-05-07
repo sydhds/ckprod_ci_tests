@@ -38,6 +38,8 @@ jobs:
     - uses: Swatinem/rust-cache@v2
       with:
         shared-key: "backend-cache"
+        # Explicitly point it to the backend folder
+        workspaces: "backend -> target" 
     - name: Check
       run: cargo check --all-features
     - name: Run tests
