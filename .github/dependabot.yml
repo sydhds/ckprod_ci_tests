@@ -1,0 +1,34 @@
+version: 2
+updates:
+  # Frontend dependencies
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly" # Options: daily, weekly, monthly
+
+  # Backend dependencies
+  - package-ecosystem: "cargo"
+    directory: "/backend"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+  
+  # Docker security 
+  - package-ecosystem: "docker"
+    directory: "/backend/docker"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "docker"
+    directory: "/frontend/docker"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+      
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"

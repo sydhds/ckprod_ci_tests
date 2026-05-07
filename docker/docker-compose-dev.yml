@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: my_database
+    ports:
+      # Security: Locked down the Postgres service to localhost only
+      #           Prevent anyone on the same network to access the DB
+      - "127.0.0.1:5432:5432"
+    profiles: ["backend_dev", "frontend_dev"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d my_database"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  backend:
+    build:
+      context: ../backend
+      dockerfile: docker/Dockerfile.dev
+    image: backend_app_img
+    container_name: backend_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      # Security: keep the frontend open to anyone so another device (mobile phone) can check the result
+      - "8080:8080"
+    profiles: ["frontend_dev"]
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/my_database
+      RESOURCES_URL: ./resources/
+      JWT_SECRET: jwts12345jwts12345
+      WEBHOOK_SECRET: abcdef
+      WEBHOOK_SUFFIX: 12345a
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: docker/Dockerfile
+    image: frontend_app_img
+    container_name: frontend_app
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules # keep node_modules folder ONLY inside the container
+      - /app/.react-router
+    ports:
+      # Security: keep the frontend open to anyone so another device (mobile phone) can check the result
+      - "5173:5173"
+    profiles: ["frontend_dev"]
+    environment:
+      NODE_ENV: development
+      WEBHOOK_SUFFIX: 12345a

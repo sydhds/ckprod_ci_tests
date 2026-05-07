@@ -1,0 +1,27 @@
+# --- Dependencies ---
+node_modules/
+npm-debug.log
+npm-debug.log.*
+
+# --- Build Outputs ---
+dist/
+build/
+.react-router/
+# out/
+
+# Environment Variables & Secrets ---
+.env
+.env.sample
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# --- Docker Files ---
+.dockerignore
+# Warning: DO NOT uncomment this or prod build will fail because it will not copy nginx.conf.template file
+# docker/

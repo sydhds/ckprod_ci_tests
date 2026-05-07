@@ -1,0 +1,4 @@
+# Note: DS-0026 require HEALTHCHECK in Dockerfile, but this is done in docker compose files
+AVD-DS-0026
+
+

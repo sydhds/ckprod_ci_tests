@@ -1,0 +1,54 @@
+# --- Build Stage ---
+FROM ubuntu:25.10 AS builder
+
+# Prevent interactive prompts during package installs
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    curl \
+    ca-certificates \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Build as non root (Rust builds can call build.rs scripts or proc-macro)
+RUN groupadd -g 10001 builduser && \
+    useradd -u 10001 -g builduser -m -s /bin/bash builduser && \
+    mkdir /app && \
+    chown builduser:builduser /app
+
+USER builduser
+
+# Install Rust (via rustup)
+RUN set -o pipefail && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+ENV PATH="/home/builduser/.cargo/bin:${PATH}"
+
+WORKDIR /app
+
+# Copy the entire backend folder context
+COPY --chown=builduser:builduser . .
+
+# Build the www server
+# RUN cargo build --release --features seed -p ckprod_web
+RUN --mount=type=cache,target=/home/builduser/.cargo/registry,uid=10001,gid=10001 \
+    --mount=type=cache,target=/home/builduser/.cargo/git,uid=10001,gid=10001 \
+    --mount=type=cache,target=/app/target,uid=10001,gid=10001 \
+    cargo build --release --features seed -p ckprod_web && \
+    cp /app/target/release/ckprod_web /app/ckprod_web_bin
+
+# --- Runtime Stage ---
+FROM ubuntu:25.10
+RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y libssl-dev ca-certificates && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -g 10001 appuser && \
+    useradd -u 10001 -g appuser -s /bin/sh appuser
+
+WORKDIR /app
+# Assuming your binary name matches your package name in Cargo.toml
+COPY --from=builder --chown=appuser:appuser /app/ckprod_web_bin ./ckprod_web
+# COPY --chown=appuser:appuser resources/ ./resources/
+
+USER appuser
+CMD ["./ckprod_web"]
