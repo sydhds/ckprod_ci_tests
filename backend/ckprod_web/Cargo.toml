@@ -6,7 +6,6 @@ edition = "2024"
 [dependencies]
 tokio.workspace = true
 axum = { version = "0.8.8", features = ["macros"] }
-cooklang.workspace = true
 thiserror.workspace = true
 serde.workspace = true
 validator = { version = "0.20.0", features = ["derive"] }
