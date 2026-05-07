@@ -18,7 +18,7 @@ jobs:
         image: postgres:18
         env:
           POSTGRES_USER: user
-          POSTGRES_PASSWORD: my_password
+          POSTGRES_PASSWORD: password
           POSTGRES_DB: my_database
         options: >-
           --health-cmd pg_isready
@@ -34,7 +34,11 @@ jobs:
         working-directory: ./backend
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
+    - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: "backend-cache"
     - name: Check
       run: cargo check --all-features
     - name: Run tests
