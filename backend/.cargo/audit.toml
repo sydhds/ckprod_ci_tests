@@ -1,0 +1,5 @@
+[advisories]
+ignore = [
+    # False positive: Cargo lockfile bug (#13078) pulls in sqlx-mysql as an unused dependency (via the 'macros' features)
+    "RUSTSEC-2023-0071",
+]

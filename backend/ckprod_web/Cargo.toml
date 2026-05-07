@@ -1,0 +1,38 @@
+[package]
+name = "ckprod_web"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio.workspace = true
+axum = { version = "0.8.8", features = ["macros"] }
+cooklang.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+validator = { version = "0.20.0", features = ["derive"] }
+sqlx.workspace = true
+# db_migrations = { path = "../db_migrations" }
+nanoid = "0.4.0"
+slug = "0.1.6"
+anyhow = { version = "1.0.102"}
+jsonwebtoken = { version = "10.3.0", features = ["aws_lc_rs"] }
+uuid = { version = "1.23.0", features = ["serde", "v4"] }
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tower-http = { version = "0.6.8", features = ["cors", "trace", "compression-full"] }
+tikv-jemallocator = "0.6.1"
+url = { version = "2.5.8", features = ["serde"] }
+derive_more = { version = "2.1.1", features = ["display"] }
+
+[dev-dependencies]
+axum-test = "20.0.0"
+serde_json = "1.0.149"
+ckprod_web = { path = ".", features = ["test-utils"] }
+
+[features]
+dev = ["seed"]
+seed = []
+test-utils = []
+
+[lints]
+workspace = true

@@ -1,0 +1,14 @@
+/target
+
+# Db
+
+# cooklang files
+resources/*.cook
+
+# IDE
+.idea
+.vscode
+
+# misc
+TODO.md
+

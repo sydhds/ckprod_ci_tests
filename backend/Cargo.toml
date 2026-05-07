@@ -1,0 +1,64 @@
+[workspace]
+members = [
+    "ckprod_web",
+    # "db_migrations",
+    # "ckprod_dev_scripts"
+]
+resolver = "3"
+
+[workspace.dependencies]
+tokio = { version = "1.51.1", features = ["rt-multi-thread", "parking_lot", "fs", "macros"] }
+serde = { version = "1.0.228", features = ["derive"] }
+thiserror = "2.0.18"
+chrono = { version = "0.4.44", default-features = false, features = ["clock"] }
+sqlx = { version = "0.8.6", default-features = false, features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "macros"] }
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+tracing = "0.1.44"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+restriction = { level = "warn", priority = -1 }
+# Clippy don't like if restriction category is enabled
+blanket_clippy_restriction_lints = "allow"
+# restriction allow
+implicit_return = "allow"
+absolute_paths = "allow" # Restriction ban: `std::env::current_dir()`
+std_instead_of_core = "allow" # Restriction ban: `use std::hash::Hasher` instead of `use core::hash::Hasher`
+single_call_fn = "allow" # Restriction ban: function only used once
+question_mark_used = "allow" # Restriction ban: usage of: `let result = expr?;`
+str_to_string = "allow" # Restriction ban: usage of `to_string()` in favor of `to_owned()`
+needless_raw_strings = "allow" # Restriction ban: raw strings when not needed
+needless_raw_string_hashes = "allow" # See above
+missing_inline_in_public_items = "allow" # Restriction ban: no #[inline] used on simple function
+arbitrary_source_item_ordering = "allow" # WTF?
+exhaustive_structs = "allow" # Restriction requires: #[non_exhaustive] on public structs
+must_use_candidate = "allow" # Restriction requires: #[must_use] on public functions
+shadow_reuse = "allow" # Restriction bans `let x = x.trim();`
+# shadow_same = "allow" # Restriction bans shadowing the exact same name
+shadow_unrelated = "allow"
+missing_docs_in_private_items = "allow" # Forces docstrings on every single internal helper
+doc_paragraphs_missing_punctuation = "allow" # ...
+missing_errors_doc = "allow" # Forces docstrings on function returning a Result
+uninlined_format_args = "allow" # Forces: `println!("{var}")` instead of `println!("{}", var);`
+field_scoped_visibility_modifiers = "allow" # Allow: `struct Foo { pub first_field: bool }`
+pub_with_shorthand = "allow" # Restriction wants: `pub(in crate) type Foo = ...;`
+mod_module_files = "allow" # Restriction bans: mod.rs files
+non_ascii_literal = "allow" # Restriction wants to use "\u{20ac}" instead of "€"
+exhaustive_enums = "allow" # Restriction bans: enum without #[non_exhaustive]
+match_same_arms = "allow" # Restriction wants: | in match on same arms
+map_unwrap_or = "allow" # Restriction wants: `.map_or(...)` instead of `.map(...).unwrap_or(...)`
+single_match_else = "allow" # Restriction is a bit of a ...
+used_underscore_binding = "allow" # Restriction bans: usage of _VAR but sometimes only usage is with: `#[cfg(debug_assertions)]`
+multiple_inherent_impl = "allow" # Restriction bans this but hey !!
+cognitive_complexity = "allow" # Seems to be deprecated - other lints are suggested
+renamed_function_params = "allow" # quite annoying - but maybe could be enabled later
+missing_trait_methods = "allow" # ...
+module_name_repetitions = "allow" # leave me alone and let me name my structs / enums / modules
+pub_use = "allow" # Restriction wants `pub mod FOO;`
+if_then_some_else_none = "allow" # Restriction bans this but let the dev chooses
+
+disallowed_macros = "deny"

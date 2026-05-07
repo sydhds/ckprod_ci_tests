@@ -1,0 +1,7 @@
+# env
+.env
+
+# IDE
+.idea
+.vscode
+AGENTS.md
