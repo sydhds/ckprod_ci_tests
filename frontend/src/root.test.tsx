@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import Root, { Layout, links } from "./root";
+import { links } from "./root";
 
 describe("root", () => {
   it("declares the favicon link", () => {
