@@ -18,7 +18,7 @@ jsonwebtoken = { version = "10.3.0", features = ["aws_lc_rs"] }
 uuid = { version = "1.23.0", features = ["serde", "v4"] }
 tracing.workspace = true
 tracing-subscriber.workspace = true
-tower-http = { version = "0.6.8", features = ["cors", "trace", "compression-full"] }
+tower-http = { version = "0.6.11", features = ["cors", "trace", "compression-full"] }
 tikv-jemallocator = "0.6.1"
 url = { version = "2.5.8", features = ["serde"] }
 derive_more = { version = "2.1.1", features = ["display"] }
